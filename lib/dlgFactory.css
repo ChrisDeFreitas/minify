@@ -1,0 +1,144 @@
+/*
+ style tags for:
+		ddlgFactory.objdlg()
+
+	updated: May 24/2017
+
+*/
+.divDlg{
+	border-radius:4px 4px;
+}
+
+.dlgBase{background-color:#fff;	border: 2px solid #fff; border-radius:0.25em; outline:0; z-index:100;}
+.dlgFrm{background-color:#fff;	border:1px outset silver; border-radius:0.25em; outline:0; padding:1em; z-index:100;}
+.divDlg{ left:30vw; top:10vh; z-index:100;
+	background-color:#fff;	border:0; box-shadow:5px 5px rgba(40%,30%,40%,0.5);
+	resize:both; overflow:hidden; padding:0 0 0.25em 0; outline:0;
+	font-size:12px; font-family:Trebuchet MS; font-weight:normal; text-align:center;
+	min-height:7em; justify-content:space-between; flex-flow:column; display:flex;  }
+
+.dlgHeader {  justify-content:space-between; flex-flow:row; display:flex;
+/*	background:fixed url('../../img/5004822-green-wallpaper-background.jpg') no-repeat; background-attachment:local; background-size:100% 100%;*/
+	background-color:#b38938;
+	border: 0px outset silver;	color:#fff; padding:0.3em 0;
+	font-size:1.2em; font-weight:bold; letter-spacing:normal; text-shadow: 2px 2px 5px #5258; }
+.dlgHeader .el{	color:rgba(90%,90%,90%,0.6); cursor:pointer; font-weight:normal; font-size:0.9em; margin:2px 5px 0px 5px; padding:0; }
+.dlgHeader .el:hover{ color:rgba(00%,85%,00%,1); }
+.dlgHeader .el:active{ color:rgba(80%,00%,80%,0.9); }
+.dlgHeader label{ display: inline-grid;
+	color:rgba(255, 255, 255, 0.51); text-shadow: 2px 2px 5px rgba(85, 34, 77, 0.72); font-size:0.8em; font-weight:normal; padding:0 1em 0 0; margin:0; }
+.dlgHeader input{ border:0; font-size:0.8em; margin:0; padding:0 0 2px 2px; text-align:center; }
+.dlgTitle{	/*transform:scaleY(-1) scaleX(-1);*/ display:inline; padding:0; outline:0;}
+
+.dlgBody{ display:flex; flex-grow:1; justify-content:space-between; flex-flow:column;
+	border:0;	color:#222; padding:0.7em 1em 0.3em 1em;
+	font-weight:normal;	font-size:1.2em; text-align:left; }",
+.dlgTextArea{ border:inset 1px silver; font-family:arial; font-size:1em; padding:0.5em; height:25vh; width:25vw; }
+.dlgFooter{ background:#fff; border:0; justify-content:flex-end; padding:0 1.5em 0.5em 1em; text-align:right; }
+.dlgButton{ background-color:rgba(60%,50%,60%,1); border:0; box-shadow:2px 2px rgba(60%,50%,60%,0.4); cursor:pointer;
+	color:#fff; font-size:0.8em; letter-spacing:2px; padding:0.3em 1em 0.5em 1em; }
+.dlgButton:hover{ background:rgba(00%,80%,00%,1); color:rgba(10%,10%,10%,0.7) }
+.dlgButton:active{ background:rgba(00%,80%,00%,0.2); box-shadow: -1px -1px rgba(40%,30%,40%,0.9);	 }
+.divBubble{ background-color:#0d3; color:#fff; cursor:pointer; border:1px solid #0d3; border-radius:0.8em;
+	font-family:arial; font-size:1em; font-weight:normal; font-style:normal; text-align:center;
+	resize:none; position:fixed; left:7vw; opacity:0;  transition:top 1.5s, opacity 1s;
+	min-height:1em; max-height:60vh; overflow:hidden; width:20em; z-index:1000;	padding:0.5em; margin:0; outline:0;	}
+.dlgHvr{display:none; z-index:100; padding:1em; position:fixed; visibility:hidden; text-align:left; }
+
+.dlgObjFilter { border-collapse:collapse; padding:0; margin: 0 auto; font-size:0.8em; text-align:center; /*width:100%;*/ }
+.dlgObjFilter td{ padding:0; text-align:center;}
+#dlgObjFilter select { max-width:20em; width: 5em;}
+
+#dlgObjToolbar{ border:0; margin:0; outline:0; padding:0 1em 0.25em 1em; text-align:left; }
+#dlgObjToolbar img:hover{ background-color:#fafaf0; border: outset 1px silver; border-radius:5px; padding:4px;}
+#dlgObjToolbar img{ border:0; cursor:pointer; margin:0 0 -7px 0; padding:5px; width:1em; }
+
+.odTableMain {border:0; border-collapse:collapse; border-spacing:0; margin:0 0.5em; padding:0; }
+
+.odTdControls { font-size:0.9em; padding:2px 5px 0 0; text-align:right; vertical-align:top; }
+.odTdControls div{ display:block;}
+.odTdControls .odRecNum{ display:inline-table; font-size:0.9em; font-family:arial; text-align:center; }
+.odTdControls .odTools{ color:#e99600;; display:inline-table; margin:0em 0 0 0; min-width:2.5em; text-align:center; }
+/*.odTdControls input { border-color:red; cursor:pointer; margin:0 0 0 0.25em; padding:0; vertical-align:bottom; }*/
+.odTools .el{	/*text-shadow:3px 3px rgba(60%,50%,60%,0.4); margin:3px 0.5em 0 0; height:1em; width:1em; */
+	cursor:pointer; display: inline; padding:2px 0 0 0; }
+.odTools .el:hover{ color:rgba(00%,85%,00%,1); text-shadow:3px 3px rgba(60%,50%,60%,0.4); }
+.odTools .el:active{ text-shadow:-1px -1px rgba(60%,50%,60%,0.4); color:rgba(80%,00%,80%,0.5); }
+
+
+.odTdData{ font-size:1em; }
+.odTdData .dlgObjRecord { cursor:pointer; line-height: 0.7em; }
+/*.odTdData .dlgObjRecord:hover { color:blue; }*/
+
+.odTdData .dlgObjRecMax {font-size:0.7em; display:inline-table; margin:0 0 0 0; width:auto; }
+.odTdData .dlgObjRecMax span:after {content:": "}
+.odTdData .dlgObjRecMax span:hover{color:#000}
+.odTdData .dlgObjRecMax div{border:0; color:#000; cursor:text; font-family:arial; font-size:1.1em; margin:0 1em 0 0; text-overflow:ellipsis; }
+
+.odDivMin { font-size:0.7em; }
+.odTdData .dlgObjRecMin {color:#ccc; display:inline-table; padding:2px; margin:0 1em 0 0; }
+.odTdData .dlgObjRecMin:hover {/*border:1px silver outset; padding:1px; */}
+.odTdData .dlgObjRecMin span {border:0; cursor:pointer; display:inline; font-weight:normal; padding:0.25em; margin:0; }
+.odTdData .dlgObjRecMin span:hover{color:#000}
+.odTdData .dlgObjRecMin div{display:none}
+
+.spFldHeader{color:#ccc; cursor:pointer; display:block; font-weight:normal; padding:0 1em 0 0; border:0; margin:0;}
+
+.dlgBody #dlgObjFilterControls,
+.dlgObjList{height:auto; width:auto; }
+.dlgObjList{
+	border:0; font-size:1em; padding:0; width:100%;
+}
+.dlgObjList{
+	margin:0; padding:0;
+	overflow-y:hidden; overflow-x:hidden;
+	font-family:arial; height:auto; width:auto;
+}
+
+#dlgObjFilterControls{ border-bottom:1px solid rgba(30%,30%,30%,0.3); padding:0; }
+#dlgObjFilterControls #rngRecs{ margin-bottom:-0.4em; }
+#dlgObjFilterControls #divRecTotal{ font-size:0.8em; border:0; color:rgba(60%,50%,60%,1); cursor:default; display:inline-block; }
+#dlgObjFilterControls .dlgButton{ font-size:0.6em; display:inline-block; padding-bottom:0.2em; margin:0.2em 0.5em 0 0.5em; }
+#dlgObjToolbar .el{	text-shadow:3px 3px rgba(60%,50%,60%,0.4);	cursor:pointer; padding:0; margin:3px 0.5em 0 0; height:1em; width:1em; }
+#dlgObjToolbar .el:hover{ color:rgba(00%,85%,00%,1); }
+#dlgObjToolbar .el:active{	text-shadow:1px 1px rgba(60%,50%,60%,0.4);	color:rgba(80%,00%,80%,0.9); }
+#dlgObjToolbar #btnFldHdrsToggle{ margin-right:3em; }
+.dlgBody .tdFilters td:first-child{ padding-left:2em; }
+.dlgBody .tdFilters td{ padding:0 0.25em; }
+.dlgBody .tdFilters td:last-child{ padding-right:2em; }
+.dlgBody .tdFilters select{ border:0; font-size:0.9em; }
+.dlgFooter .dlgButton{margin:0 0 0 0.5em}
+
+
+/*.prpDlg{background:local url(../../img/5004822-green-wallpaper-background.jpg);*/
+.prpDlg{background:#272f2e;
+	background-size: 90%;
+max-height:80vh; /*max-width:35em;*/}
+.prpDlgBody{color:#fff; overflow:auto;}
+.prpDlgLabel{background:transparent; display:block; margin:0 0 0.3em; width:100%; }
+.prpDlgSpan{display:inline-table; min-width:9em;}
+.prpDlgSpan:hover{color:#0a0; }
+.prpDlgSpan i{ display:inline-table; padding:0; margin:2px 0 0 0; width:16px; }
+.prpDlgInput, .prpDlgSelect{background-color:#fff; border:1px silver inset; border-radius:0.7em; color:#000;
+	display:inline-table; font-family:arial; font-size:0.8em;
+	padding:3px; width:15em; }
+.prpDlg .dlgFooter{background:transparent; font-size:0.8em; margin:1em 0 0 0; }
+
+@keyframes logoani {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0) scale3d(0.5, 0.5, 0.5) rotateY(270deg);
+  }
+  50% {
+    opacity: 1;
+    transform: none;
+  }
+	to {
+    opacity: 0;
+		transform: scale3d(0.3, 0.3, 0.3) rotateZ(359deg);
+  }
+}
+.logoani {
+	/*animation-iteration-count:3;*/
+  animation-name: logoani;
+}

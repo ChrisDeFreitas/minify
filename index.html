@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="lang" content="en">
+<meta name="author" content="Chris DeFreitas">
+<meta http-equiv="Reply-to" content="chrisd@europa.com">
+<title>Transpile and Minify</title>
+
+
+<script src="lib/codemirror.js"></script>
+<link rel="stylesheet" href="lib/codemirror.css">
+<script src="lib/mode/javascript/javascript.js"></script>
+
+<!--link rel="stylesheet" href="lib/dlgFactory.css"-->
+<script src="lib/dlgFactory.js"></script>
+
+<!--link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet"-->
+<link href="https://fonts.googleapis.com/css?family=Raleway:light,italic,bolditalic&display=swap" rel="stylesheet">
+<style>
+	body { font-family:'Raleway',sans-serif; padding:1em; margin:0;}
+	.CodeMirror{ box-shadow:3px 3px 2px #999; border:1px solid #eef; margin:0; height:45em; width:100%; max-width:40em; }
+</style>
+<script>
+	var cmInput = null
+	var cmBabel = null
+	var cmMinified = null
+	let cmOptions = {
+		  //value: "function myScript(){return 100;}\n",
+		  autoFocus:true,
+		  lineNumbers:true,
+		  lineWrapping:true,
+		  mode:"javascript",
+		  tabSize:2,
+		}
+	function init(){
+		cmInput = CodeMirror.fromTextArea(inputEl, cmOptions)
+		cmBabel = CodeMirror.fromTextArea(outputEl, cmOptions)
+		cmMinified = CodeMirror.fromTextArea(minifiedEl, cmOptions)
+	}
+  function callAll(){
+  	babel()
+  	window.setTimeout( () => closure(), 500)
+  }
+  function closure() {
+  	cmMinified.setValue('')
+
+  	let sel = document.getElementById('selcompilation_level')
+  	let cl = sel.options[sel.selectedIndex].label
+  	sel = document.getElementById('sellanguage_out')
+  	let lo = sel.options[sel.selectedIndex].label
+  	sel = document.getElementById('seloutput_info')
+  	let oi = sel.options[sel.selectedIndex].label
+
+  	let params = []
+    params.push('output_format=text')
+    params.push('warning_level=VERBOSE')
+
+    params.push('output_info='+oi)
+    params.push('compilation_level='+cl)
+    params.push('language_out='+lo)
+
+  	if(document.getElementById('cbpretty_print').checked===true)
+	    params.push('formatting=pretty_print')
+
+  	if(document.getElementById('cbUseInput').checked===true)
+			params.push('js_code=' + encodeURIComponent( cmInput.getValue() ))
+		else
+			params.push('js_code=' + encodeURIComponent( cmBabel.getValue() ))
+
+		ajax("https://closure-compiler.appspot.com/compile",
+			'Calling closure compiler',
+			function(data, params, error, XMLHttpRequest){
+				cmMinified.setValue(data)
+		    dlgFactory.bbl('Closure done.')
+			},
+			function(msg, params, dur, XMLHttpRequest){
+				console.log('Error', msg, params)
+			},
+			null,
+			params
+		)
+  }
+	function ajax(url, msg, callback, errCallback, hdr, params){
+		// callback = function(data, params, error, XMLHttpRequest){...}
+		// errCallback = function(msg, params, dur, XMLHttpRequest){...}
+		// hdr = {hdrName1:hdrValue1, hdrName2:hdrValue2, etc}; may be null
+		// params = ["key=value", ...], based as Post parameters
+		console.log('\najax:', url)
+		dlgFactory.bbl(msg)
+		if(hdr===undefined) hdr = {}
+		if(callback==null) callback=false
+		if(errCallback==null) errCallback=false
+
+		var _start = new Date().getTime()
+			, _last = _start
+			, request = new XMLHttpRequest()
+		/*if (window.XMLHttpRequest) { // Mozilla, Safari, IE7+ ...
+		  request = new XMLHttpRequest();
+		} else if (window.ActiveXObject) { // IE 6 and older
+			request = new ActiveXObject("Microsoft.XMLHTTP");
+		}*/
+		request.addEventListener("progress", function(event){
+			if(request==null) return
+			var _cur = new Date().getTime()
+				, itmp = (_cur -_last)
+			if(itmp > 5000){	//log message every n milliseconds
+				_last = _cur
+				console.log('Elapsed time:', itmp)
+			  if (event.lengthComputable) {
+			    var percentComplete = Math.round(event.loaded / event.total *100)
+			    if(percentComplete < 100)
+			    	console.log(percentComplete+'% of data downloaded...')
+			    	dlgFactory.bbl(percentComplete+'% of data downloaded...')
+			  } else {    // Unable to compute progress information since the total size is unknown
+			    	console.log('Data download in progress...')
+			   	dlgFactory.bbl('Data download in progress...')
+			  }
+		  }
+ 		})
+		request.onreadystatechange = function() {
+			/* this.readyState:
+				0 (uninitialized) or (request not initialized)
+				1 (loading) or (server connection established)
+				2 (loaded) or (request received)
+				3 (interactive) or (processing request)
+				4 (complete) or (request finished and response is ready)	- //XMLHttpRequest.DONE
+			*/
+			var _cur = new Date().getTime()
+				, itmp = _cur -_last
+	    if(itmp > 5000 && this.readyState == 1 ) {
+				_last = _cur
+	    	dlgFactory.bbl('Connected to server...')
+	    } else
+	    if(itmp > 5000 && this.readyState == 2) {
+				_last = _cur
+	    	//dlgFactory.bbl('Request received...')
+				console.log('Request received...')
+	    } else
+	    if(itmp > 5000 && this.readyState == 3) {
+				_last = _cur
+	    	dlgFactory.bbl('Processing received data...')
+				console.log('Processing received data...')
+	    } else
+	    if(this.readyState == 4) {
+	    	itmp = (Math.round(itmp /1000 *100)/100)+'sec'
+		    if(this.status===200) {
+					console.log('AJAX Success ('+itmp+')', this)
+					if(callback!=false)
+						callback(this.responseText, params, itmp, false)
+		  	}
+		  	else {
+		    	console.log('AJAX Error ('+itmp+'), \nstatus:', this.status, ' \nstatusText:', this.statusText, ' \nrequest:', this)
+					if(errCallback!=false) errCallback(msg,params,itmp,this)
+		  	}
+		  	request = null
+				itmp = ((new Date().getTime() -_start)/1000)+'sec.'
+		  	console.log('Request processing completed: '+itmp)
+	  	}
+		}
+		request.open('POST', url)
+		request.responseType = 'text'
+		request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		if(hdr!=null){
+			for(key in hdr){
+				request.setRequestHeader(key, hdr[key])
+			}
+		}
+		urlEncodedData = params.join('&').replace(/%20/g, '+');
+//		console.log('params',params)
+//		console.log('urlEncodedData',urlEncodedData)
+		request.send(urlEncodedData)
+	}
+</script>
+</head>
+
+<body onload="init()">
+<h2 style='display:inline-table; margin:0; font-weight:bold; font-style:italic;'>
+Transpile and Minify
+</h2>
+<br><br>
+
+<div style='display:inline-table; margin-right:1em; width:30%;'>Input:<br>
+<textarea id="input">
+function getTableById(id, response){
+	let tables = response.data.TABLES,
+			table = null
+	for(tb of tables){
+		if(tb.ID != id) continue
+		table = tb
+		break;
+	}
+	x = `Table id = ${id}`
+	console.log(x)
+	return table
+}
+</textarea>
+<div style='font-size:0.8em; padding:5px 0 0 20px; width:90%;'>
+	<input type="button" value="Empty" onclick="cmInput.setValue('')" style="position:relative;"> &nbsp;
+	<input type="button" value="   All   " onclick="callAll()" title='Call Babel and Closure with current settings'><br>
+	<span style='font-size:0.8em; font-style:italic'>
+		Thanks to: &nbsp;
+		<a href="https://babeljs.io/docs/en/" target=_new>Babeljs.io</a>, &nbsp;
+		<a href="https://developers.google.com/closure/compiler/docs/api-ref" target=_new>Closure</a>, &nbsp;
+		<a href="https://codemirror.net" taarget=_new>CodeMirror</a>, &nbsp;
+		<a href="https://fonts.google.com" taarget=_new>Google Fonts</a><br>
+	</span>
+</div>
+</div>
+
+<div style='display:inline-table; margin-right:1em; width:30%;'>
+	Transformed code using Babel <strong id="version"></strong>, es2015-loose:<br>
+	<textarea id="output"></textarea>
+<div style='font-size:0.8em; padding:5px 0 0 20px; width:90%;'>
+	<button onclick="babel()">Babel</button><br>
+	<span style='font-size:0.8em; font-style:italic'>
+	Notes:<br>
+	- Babel code (ES2015) can be used in older browsers unmodified.<br>
+	- the minify preset is not available in @babel/standalone, in addition <a href="https://babeljs.io/repl" target=_new>
+	https://babeljs.io/repl</a> fails to minify, therefore as 20190601, @babel/standalone is best for converting the latest Javascript to ES2015
+	</span>
+</div>
+</div>
+
+<div style='display:inline-table;  width:30%;'>
+Transformed code using Closure Compiler API :<br>
+<textarea id="minified"></textarea>
+<div style='font-size:0.8em; padding:5px 0 0 20px; width:90%;'>
+	<label>Input:
+		<label><input id=cbUseInput type=radio name=ClosureInput checked> Use Input</label>
+		<label><input id=cbUseBabel type=radio name=ClosureInput> Use Babel</label>
+	</label><br>
+	<label>pretty_print (minify = unchecked):	<input type=checkbox id=cbpretty_print></label><br>
+	output_info: <select id=seloutput_info>
+		<option>compiled_code</option>
+		<option>warnings</option>
+		<option>errors</option>
+		<option>statistics</option>
+	</select><br>
+	compilation_level: <select id=selcompilation_level>
+		<option>SIMPLE_OPTIMIZATIONS</option>
+		<option>WHITESPACE_ONLY</option>
+		<option>ADVANCED_OPTIMIZATIONS</option>
+	</select><br>
+	language_out: <select id=sellanguage_out>
+		<option>ECMASCRIPT5</option>
+		<option>ECMASCRIPT5_STRICT</option>
+		<option>ECMASCRIPT6</option>
+		<option>ECMASCRIPT6_STRICT</option>
+		<option>ECMASCRIPT3</option>
+	</select><br>
+	<input type="button" value="Closure" onclick="closure()"><br>
+	<span style='font-size:0.8em; font-style:italic;'>
+	Notes:<br>
+	- output from WHITESPACE_ONLY cannot be used in browsers
+	because it is missing the $jscomp definition (and perhaps others)<br>
+	- ADVANCED_OPTIMIZATIONS has strict/idealistic requirements, not practical in the real world<br>
+	- therefore Closure is best used with SIMPLE_OPTIMIZATIONS<br>
+	- language_out:ECMASCRIPT6 is equivalent to ES2015<br>
+	- language_out:ECMASCRIPT5 provides compatibility with browsers circa 2009<br>
+	- language_out:ECMASCRIPT3 provides compatibility with browsers circa 1999<br>
+	</span>
+</div>
+</div>
+
+<script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+<script>
+	//console.log('Babel =', Babel);
+	document.getElementById('version').innerHTML = Babel.version;
+	var inputEl = document.getElementById('input');
+	var outputEl = document.getElementById('output');
+	var minifiedEl = document.getElementById('minified');
+	function babel() {
+	  try {
+	  	if(cmBabel == null){
+		    outputEl.innerHTML = Babel.transform(inputEl.value, {
+		      presets: ['es2015-loose']
+		    }).code;
+		  }
+		  else{
+		  	cmBabel.setValue('')
+		    cmBabel.setValue( Babel.transform(cmInput.getValue(), {
+		      	presets: ['es2015-loose']
+		    	}).code
+		    )
+		    dlgFactory.bbl('Babel done.')
+		   }
+	  } catch (ex) {
+	  	if(cmBabel == null)
+		    outputEl.innerHTML = 'ERROR: ' + ex.message
+		  else
+		    cmBabel.setValue( 'ERROR: ' + ex.message )
+	  }
+	}
+	babel();
+</script>
+
+</body>
