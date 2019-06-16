@@ -6,6 +6,7 @@ I put it together to simplify the entire process as I was moving between website
 
 The code is stored here so I can get at it from different locations.  Feel free to use and modify.
 
+For online use see: https://chrisdefreitas.github.io/minify/
 
 ## Thanks to
 
