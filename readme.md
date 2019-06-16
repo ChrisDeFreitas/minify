@@ -1,6 +1,6 @@
 # minify
 
-This is an single HTML page that allows Javascript code to be pasted then transpiled and minified with Babel Standalone and/or the Google Closure API.  The page contains comments to guide usage of the tools.
+This is an single HTML page that allows Javascript code to be pasted then transpiled and minified with Babel Standalone and/or the Google Closure Compiler API.  The page contains comments to guide usage of the tools.
 
 I put it together to simplify the entire process as I was moving between websites to accomplish various tasks and then having to refresh myself on the details of the various usages.
 
